@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <style type="text/css">
+        .item {
+            width: 150px;
+            height: 150px;
+            background-size:100%;
+            background-repeat: no-repeat;
+            margin-top: 20px;
+            margin-left: 20px;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            height: 200px;
+            width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .active {
+            box-shadow: 0px 4px 6px rgba(0, 255, 0, 8);
+        }
+
+        .time {
+            position: absolute;
+            left: 890px;
+            top: 500px;
+            font-family: Courier New;
+            color: green;
+        }
+
+        .body {
+            background-image: url(body.jpg);
+        }
+
+        .victory {
+            height: 400px;
+            position: absolute;
+            left: 750px;
+            top: 200px;
+            display: none;
+        }
+
+        .victoryt {
+            position: absolute;
+            color: green;
+            left: 110px;
+            top: 500px;
+            text-shadow: 0px 4px 6px rgba(0, 0, 0, 1.0);
+            font-size: 100px;
+            font-family: Courier New;
+            display: none;
+        }
+
+        .lose {
+            height: 800px;
+            position: absolute;
+            left: 555px;
+            display: none;
+        }
+
+        .loset {
+            position: absolute;
+            color: red;
+            left: 610px;
+            top: 500px;
+            text-shadow: 0px 4px 6px rgba(0, 0, 0, 1.0);
+            font-size: 100px;
+            font-family: Courier New;
+            display: none;
+        }
+    </style>
+</head>
+<body class="body">
+    <img class="victory" src="victory.png">
+    <img class="lose" src="lose.png">
+    <h1 class="victoryt">Ты прошел испытание! Молодец!</h1>
+    <h1 class="loset">Ты не успел!</h1>
+    <div class="row">
+        <h1 class="time">Время:
+            <span class="timer">8</span>
+        </h1>
+    </div>
+    <script type="text/javascript">
+    //див-родитель
+    let victoryt = document.querySelector('.victoryt')
+    let victory = document.querySelector('.victory')
+    let timer = document.querySelector(".timer");
+    let loset = document.querySelector('.loset');
+    let lose = document.querySelector('.lose');
+    let time = document.querySelector(".time");
+    let row = document.querySelector(".row");
+    let img;
+    let step = 0;
+    let firstDiv;
+    let point = 0;
+    let x = 8;
+
+
+    //хранение картинок
+    let images = ["1.jpg", "2.webp", "3.jpg", "4.png", "5.jpg", "6.jpg", "1.jpg", "2.webp", "3.jpg", "4.png", "5.jpg", "6.jpg"];
+
+    for (let i=0; i<12; i=i+1) {
+        let item = document.createElement('div');
+        row.appendChild(item);
+        item.classList.add('item');
+        let index = Math.round(Math.random()*(images.length-1));
+        item.style.backgroundImage = 'url(' + images[index] + ')';
+        images.splice(index,1);
+
+        item.onclick = function() {
+            item.classList.add('active');
+            step = step + 1;
+
+            if(step == 1){
+                img = item.style.backgroundImage;
+                firstDiv = item;
+            }
+
+            if(step >= 2){
+                if(item.style.backgroundImage==img) {
+                    point = point + 1;
+                    console.log('match')
+                    item.style.backgroundImage = "none";
+                    firstDiv.style.backgroundImage = "none";
+                    item.classList.remove('active')
+                    firstDiv.classList.remove('active')
+                }
+                else {
+                    console.log('none match')
+                    firstDiv.classList.remove('active')
+                }
+                step = 0;
+            }
+        }
+    }  
+
+    let Timer = function(){
+        x = x - 1
+        timer.innerHTML = x
+        if(x<=6){
+            time.style.color = "yellow"
+        }
+
+        if(x<=4){
+            time.style.color = "orange"
+        }
+
+        if(x<=2){
+            time.style.color = "red"
+        }
+    }
+
+    let endGame = function(){
+        clearInterval(interval1)
+        if(point==6){
+            victory.style.display = "block"
+            victoryt.style.display = "block"
+            time.style.display = "none"
+        }
+        else{
+            lose.style.display = "block"
+            loset.style.display = "block"
+            time.style.display = "none"
+        }
+        
+    }
+
+    interval1 = setInterval(Timer, 1000)
+    setTimeout(endGame, 8000)
+
+    </script>
+</body>
+</html>
